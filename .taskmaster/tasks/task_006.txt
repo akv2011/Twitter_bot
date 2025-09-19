@@ -1,0 +1,11 @@
+# Task ID: 6
+# Title: Build Automated Content Posting Pipeline
+# Status: todo
+# Dependencies: 3, 4, 5
+# Priority: medium
+# Description: Combine the scheduling, AI generation, and posting functionalities into a single, automated workflow.
+# Details:
+Create a scheduled job function that: 1) Fetches a user's posting configuration (schedule, themes). 2) Calls the `ClaudeService` to generate tweet content. 3) Optionally, places the content in a 'pending review' state in the database. 4) For approved/auto-post content, it calls the `TwitterService` to post the tweet. Implement a Redis-based queue (using Celery or RQ) to handle the posting action, allowing for retries on failure.
+
+# Test Strategy:
+End-to-end test the entire pipeline: configure a schedule, wait for the job to trigger, verify the Claude API was called, and confirm the tweet appears on the test Twitter account. Test the retry mechanism by simulating a temporary failure in the Twitter API.

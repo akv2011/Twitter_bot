@@ -1,0 +1,11 @@
+# Task ID: 5
+# Title: Implement Task Scheduling System
+# Status: todo
+# Dependencies: None
+# Priority: medium
+# Description: Integrate a persistent scheduling library to trigger automated tasks like content posting and account monitoring based on user-defined schedules.
+# Details:
+Use `APScheduler` with a `PostgreSQLJobStore` backend. This ensures that scheduled jobs persist across application restarts and deployments. Create a `SchedulerService` to abstract the scheduler's functionality, providing methods to add, remove, and update jobs dynamically based on user configuration changes received via API.
+
+# Test Strategy:
+Unit test the `SchedulerService` to ensure jobs can be added and removed correctly. Set up a short-interval test job (e.g., every minute) that logs a message, and verify that it runs consistently after an application restart.

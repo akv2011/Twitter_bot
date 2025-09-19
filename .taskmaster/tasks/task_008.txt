@@ -1,0 +1,11 @@
+# Task ID: 8
+# Title: Develop AI-Powered Contextual Reply Generation
+# Status: todo
+# Dependencies: 4, 7
+# Priority: medium
+# Description: Use Claude AI to analyze target tweets and generate meaningful, context-aware replies that maintain a consistent personality.
+# Details:
+Extend the `ClaudeService` with a `generate_reply` method. This method will take the target tweet's text, conversation context (if available), and a bot personality profile as input. The prompt engineering will be critical: instruct Claude to analyze sentiment, understand the context, and generate a reply that is relevant, engaging, and consistent with the defined personality.
+
+# Test Strategy:
+Create a suite of test cases with different types of target tweets (questions, announcements, opinions). Evaluate the generated replies for contextuality, tone, and personality consistency. Refine the master prompt based on test results.

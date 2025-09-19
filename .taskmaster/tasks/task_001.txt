@@ -1,0 +1,11 @@
+# Task ID: 1
+# Title: Core Backend Setup and Twitter OAuth 2.0 Integration
+# Status: todo
+# Dependencies: None
+# Priority: high
+# Description: Establish the project's foundational backend structure using FastAPI and implement the secure OAuth 2.0 (PKCE) authentication flow to connect with the Twitter API v2.
+# Details:
+Initialize a Python project with FastAPI. Set up the Git repository with a .gitignore file. Implement the necessary endpoints for the OAuth 2.0 PKCE flow: one to generate the authorization URL and redirect the user to Twitter, and a callback endpoint to handle the response, exchange the authorization code for an access token, and securely store it. Use a library like `requests-oauthlib` to manage the OAuth flow complexities.
+
+# Test Strategy:
+Unit test the OAuth URL generation. Manually test the end-to-end authentication flow in a browser, ensuring tokens are received and stored correctly. Mock the Twitter API responses to test the callback handler's logic in isolation.

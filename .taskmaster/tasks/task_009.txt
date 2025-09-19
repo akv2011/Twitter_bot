@@ -1,0 +1,11 @@
+# Task ID: 9
+# Title: Implement Queued Engagement and Reply System
+# Status: todo
+# Dependencies: 8
+# Priority: low
+# Description: Build the logic to post generated replies with appropriate timing delays and rate limiting to avoid spam detection.
+# Details:
+When a new target tweet is identified (Task 7) and a reply is generated (Task 8), place the reply job into a delayed queue (e.g., Celery with an `eta` parameter). The delay should be a randomized value within the configured optimal window (e.g., 2-4 hours). A separate worker process will consume from this queue. Implement rate-limiting logic within the worker to respect Twitter's API limits for posting replies.
+
+# Test Strategy:
+Verify that a generated reply is correctly added to the delayed queue with the right `eta`. Monitor the queue and confirm the worker picks up the job after the delay. Test the rate-limiting by queuing up more replies than the limit allows and ensuring the system throttles correctly without errors.

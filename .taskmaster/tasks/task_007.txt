@@ -1,0 +1,11 @@
+# Task ID: 7
+# Title: Develop Target Account Monitoring Service
+# Status: todo
+# Dependencies: 5
+# Priority: medium
+# Description: Create a background service to periodically check for new tweets from a configured list of target accounts using the Twitter API v2.
+# Details:
+Create a scheduled job that runs at a configurable interval (e.g., every 5 minutes). The job will iterate through the list of target accounts for each user. It will use the `users/:id/tweets` endpoint with the `since_id` parameter to fetch only new tweets since the last check. The `newest_id` from each API response should be stored per target account to be used as the `since_id` for the next run.
+
+# Test Strategy:
+Set up a test target account and post new tweets to it. Verify that the monitoring service correctly identifies and processes only the new tweets, and correctly updates the `since_id` value in the database.

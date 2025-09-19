@@ -1,0 +1,11 @@
+# Task ID: 11
+# Title: Implement Analytics Data Collection and API
+# Status: todo
+# Dependencies: 6, 9
+# Priority: low
+# Description: Design the database schema and implement services to log all bot activities (posts, replies) and expose this data via an API for a dashboard.
+# Details:
+Extend the PostgreSQL schema with tables for `posted_content` and `engagement_analytics`. Log every post and reply, including its content, timestamp, and a foreign key to the original user. Create a separate scheduled job to periodically fetch metrics (likes, retweets) for recent posts. Develop authenticated GET endpoints like `/api/v1/analytics/summary` and `/api/v1/analytics/posts` to serve aggregated and detailed data to a frontend.
+
+# Test Strategy:
+After performing posts and replies, query the database directly to verify data is being logged correctly. Test the analytics API endpoints to ensure they return accurate data and are properly secured.

@@ -1,0 +1,166 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Core Backend Setup and Twitter OAuth 2.0 Integration",
+        "description": "Establish the project's foundational backend structure using FastAPI and implement the secure OAuth 2.0 (PKCE) authentication flow to connect with the Twitter API v2.",
+        "details": "Initialize a Python project with FastAPI. Set up the Git repository with a .gitignore file. Implement the necessary endpoints for the OAuth 2.0 PKCE flow: one to generate the authorization URL and redirect the user to Twitter, and a callback endpoint to handle the response, exchange the authorization code for an access token, and securely store it. Use a library like `requests-oauthlib` to manage the OAuth flow complexities.",
+        "testStrategy": "Unit test the OAuth URL generation. Manually test the end-to-end authentication flow in a browser, ensuring tokens are received and stored correctly. Mock the Twitter API responses to test the callback handler's logic in isolation.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "todo",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Secure Configuration and Token Management",
+        "description": "Implement a secure system for managing API keys (Twitter, Claude), user access/refresh tokens, and other application settings.",
+        "details": "Use `python-dotenv` for loading environment variables in local development. For production, rely on environment variables injected by the deployment environment. Store user-specific tokens (access and refresh) in a PostgreSQL database. Encrypt these tokens at the application level using a library like `cryptography` before database insertion. Implement a service to automatically refresh the Twitter access token using the stored refresh token when it expires.",
+        "testStrategy": "Verify that API keys are not hardcoded. Test the token encryption and decryption functions. Write a unit test for the token refresh logic, mocking an 'expired token' response from the Twitter API to ensure the refresh flow is triggered correctly.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "todo",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Implement Basic Tweet Posting Functionality",
+        "description": "Create a core service and an API endpoint to post a text-based tweet to a user's timeline using the Twitter API v2.",
+        "details": "Develop a `TwitterService` class that encapsulates all interactions with the Twitter API. Use a modern Python library that supports Twitter API v2, or build a thin client using `requests`. Create a protected API endpoint (e.g., `/tweets/post`) that accepts tweet content. This endpoint should retrieve the user's stored access token, call the `TwitterService` to post the tweet, and handle any potential API errors from Twitter.",
+        "testStrategy": "Unit test the `TwitterService` by mocking the API client. Conduct an integration test by calling the API endpoint with valid credentials and verifying that a tweet is successfully posted to a test Twitter account.",
+        "priority": "high",
+        "dependencies": [
+          1,
+          2
+        ],
+        "status": "todo",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Integrate Claude AI for Content Generation",
+        "description": "Develop a module to communicate with the Claude AI API for generating engaging tweet content based on given prompts and themes.",
+        "details": "Integrate the official Anthropic Python SDK. Create a `ClaudeService` with a method like `generate_tweet(prompt, content_type)`. This method will construct a detailed prompt for the Claude API, including instructions on tone, style, and content type (e.g., thought, quote, tip). Implement robust error handling for API failures and a basic content filter to check for inappropriate generated text.",
+        "testStrategy": "Unit test the `ClaudeService` by mocking the Anthropic SDK. Verify that prompts are constructed correctly. Perform manual tests with various prompts and themes to evaluate the quality and relevance of the generated content.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "todo",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Implement Task Scheduling System",
+        "description": "Integrate a persistent scheduling library to trigger automated tasks like content posting and account monitoring based on user-defined schedules.",
+        "details": "Use `APScheduler` with a `PostgreSQLJobStore` backend. This ensures that scheduled jobs persist across application restarts and deployments. Create a `SchedulerService` to abstract the scheduler's functionality, providing methods to add, remove, and update jobs dynamically based on user configuration changes received via API.",
+        "testStrategy": "Unit test the `SchedulerService` to ensure jobs can be added and removed correctly. Set up a short-interval test job (e.g., every minute) that logs a message, and verify that it runs consistently after an application restart.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "todo",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Build Automated Content Posting Pipeline",
+        "description": "Combine the scheduling, AI generation, and posting functionalities into a single, automated workflow.",
+        "details": "Create a scheduled job function that: 1) Fetches a user's posting configuration (schedule, themes). 2) Calls the `ClaudeService` to generate tweet content. 3) Optionally, places the content in a 'pending review' state in the database. 4) For approved/auto-post content, it calls the `TwitterService` to post the tweet. Implement a Redis-based queue (using Celery or RQ) to handle the posting action, allowing for retries on failure.",
+        "testStrategy": "End-to-end test the entire pipeline: configure a schedule, wait for the job to trigger, verify the Claude API was called, and confirm the tweet appears on the test Twitter account. Test the retry mechanism by simulating a temporary failure in the Twitter API.",
+        "priority": "medium",
+        "dependencies": [
+          3,
+          4,
+          5
+        ],
+        "status": "todo",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Develop Target Account Monitoring Service",
+        "description": "Create a background service to periodically check for new tweets from a configured list of target accounts using the Twitter API v2.",
+        "details": "Create a scheduled job that runs at a configurable interval (e.g., every 5 minutes). The job will iterate through the list of target accounts for each user. It will use the `users/:id/tweets` endpoint with the `since_id` parameter to fetch only new tweets since the last check. The `newest_id` from each API response should be stored per target account to be used as the `since_id` for the next run.",
+        "testStrategy": "Set up a test target account and post new tweets to it. Verify that the monitoring service correctly identifies and processes only the new tweets, and correctly updates the `since_id` value in the database.",
+        "priority": "medium",
+        "dependencies": [
+          5
+        ],
+        "status": "todo",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Develop AI-Powered Contextual Reply Generation",
+        "description": "Use Claude AI to analyze target tweets and generate meaningful, context-aware replies that maintain a consistent personality.",
+        "details": "Extend the `ClaudeService` with a `generate_reply` method. This method will take the target tweet's text, conversation context (if available), and a bot personality profile as input. The prompt engineering will be critical: instruct Claude to analyze sentiment, understand the context, and generate a reply that is relevant, engaging, and consistent with the defined personality.",
+        "testStrategy": "Create a suite of test cases with different types of target tweets (questions, announcements, opinions). Evaluate the generated replies for contextuality, tone, and personality consistency. Refine the master prompt based on test results.",
+        "priority": "medium",
+        "dependencies": [
+          4,
+          7
+        ],
+        "status": "todo",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Implement Queued Engagement and Reply System",
+        "description": "Build the logic to post generated replies with appropriate timing delays and rate limiting to avoid spam detection.",
+        "details": "When a new target tweet is identified (Task 7) and a reply is generated (Task 8), place the reply job into a delayed queue (e.g., Celery with an `eta` parameter). The delay should be a randomized value within the configured optimal window (e.g., 2-4 hours). A separate worker process will consume from this queue. Implement rate-limiting logic within the worker to respect Twitter's API limits for posting replies.",
+        "testStrategy": "Verify that a generated reply is correctly added to the delayed queue with the right `eta`. Monitor the queue and confirm the worker picks up the job after the delay. Test the rate-limiting by queuing up more replies than the limit allows and ensuring the system throttles correctly without errors.",
+        "priority": "low",
+        "dependencies": [
+          8
+        ],
+        "status": "todo",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Build Configuration Management API",
+        "description": "Create RESTful API endpoints for clients to manage all user-configurable settings, such as schedules, target accounts, and content preferences.",
+        "details": "Using FastAPI, implement a full suite of authenticated CRUD endpoints. Examples: `POST /api/v1/targets` to add a target account, `PUT /api/v1/schedule` to update the posting frequency, `GET /api/v1/config` to retrieve all settings for a user. Use Pydantic models for request validation. These endpoints will read from and write to the PostgreSQL database.",
+        "testStrategy": "Write API tests for each endpoint using a tool like `pytest` with `httpx`. Test create, read, update, and delete operations. Test validation by sending malformed requests. Test authorization by ensuring a user cannot modify another user's settings.",
+        "priority": "medium",
+        "dependencies": [
+          1
+        ],
+        "status": "todo",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Implement Analytics Data Collection and API",
+        "description": "Design the database schema and implement services to log all bot activities (posts, replies) and expose this data via an API for a dashboard.",
+        "details": "Extend the PostgreSQL schema with tables for `posted_content` and `engagement_analytics`. Log every post and reply, including its content, timestamp, and a foreign key to the original user. Create a separate scheduled job to periodically fetch metrics (likes, retweets) for recent posts. Develop authenticated GET endpoints like `/api/v1/analytics/summary` and `/api/v1/analytics/posts` to serve aggregated and detailed data to a frontend.",
+        "testStrategy": "After performing posts and replies, query the database directly to verify data is being logged correctly. Test the analytics API endpoints to ensure they return accurate data and are properly secured.",
+        "priority": "low",
+        "dependencies": [
+          6,
+          9
+        ],
+        "status": "todo",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Containerize Application with Docker for Deployment",
+        "description": "Create Docker and Docker Compose files to package the application and its dependencies for reproducible, scalable deployment.",
+        "details": "Write a multi-stage `Dockerfile` for the FastAPI application to create an optimized, production-ready image. Create a `docker-compose.yml` file to define and orchestrate the application services: the FastAPI backend, a PostgreSQL database service (with a persistent volume), and a Redis service for caching and queueing. Include health checks for the services.",
+        "testStrategy": "Build the Docker images and run `docker-compose up` on a clean machine. Test the full application functionality, including database connectivity and queueing, to ensure the containerized environment works as expected. Verify that data persists in the database volume after restarting the containers.",
+        "priority": "low",
+        "dependencies": [
+          11
+        ],
+        "status": "todo",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-09-19T18:35:41.193Z",
+      "updated": "2025-09-19T18:36:33.157Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
