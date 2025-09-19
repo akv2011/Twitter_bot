@@ -23,3 +23,11 @@ node_modules/
 
 # OS specific
 .DS_Store
+/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+/.cursor/
+/.claude/
+/.tastmaster/

@@ -8,9 +8,18 @@ from typing import Optional, List
 import tweepy
 
 from config.settings import get_settings
+from src.services.claude_service import ClaudeService
 
 router = APIRouter()
 settings = get_settings()
+
+
+class TweetGenerate(BaseModel):
+    """Tweet generation request model"""
+    prompt: str
+    theme: Optional[str] = "general"
+    personality: Optional[str] = "friendly"
+    max_length: Optional[int] = 280
 
 
 class TweetCreate(BaseModel):
@@ -34,6 +43,32 @@ def get_twitter_client():
     """Get authenticated Twitter API client"""
     # This will be properly implemented with stored user tokens
     return None
+
+
+@router.post("/generate")
+async def generate_tweet_content(request: TweetGenerate):
+    """Generate tweet content using AI"""
+    try:
+        claude_service = ClaudeService()
+        
+        result = await claude_service.generate_tweet_content(
+            prompt=request.prompt,
+            theme=request.theme,
+            personality=request.personality,
+            max_length=request.max_length
+        )
+        
+        if result["success"]:
+            return {
+                "success": True,
+                "content": result["content"],
+                "length": len(result["content"])
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result["error"])
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to generate content: {str(e)}")
 
 
 @router.post("/", response_model=TweetResponse)

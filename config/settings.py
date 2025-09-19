@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     twitter_client_id: str = Field(..., env="TWITTER_CLIENT_ID")
     twitter_client_secret: str = Field(..., env="TWITTER_CLIENT_SECRET") 
     twitter_redirect_uri: str = Field(default="http://localhost:8000/auth/callback", env="TWITTER_REDIRECT_URI")
+    twitter_bearer_token: str = Field(..., env="TWITTER_BEARER_TOKEN")
+    twitter_access_token: str = Field(..., env="TWITTER_ACCESS_TOKEN")
+    twitter_access_token_secret: str = Field(..., env="TWITTER_ACCESS_TOKEN_SECRET")
     
     # Claude AI Configuration
     claude_api_key: str = Field(..., env="CLAUDE_API_KEY")
@@ -40,9 +43,10 @@ class Settings(BaseSettings):
     # Security Configuration
     token_expire_hours: int = Field(default=24, env="TOKEN_EXPIRE_HOURS")
     
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    model_config = {
+        "env_file": ".env",
+        "env_file_encoding": "utf-8"
+    }
 
 
 # Global settings instance

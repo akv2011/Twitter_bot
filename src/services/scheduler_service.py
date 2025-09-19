@@ -85,7 +85,7 @@ class SchedulerService:
         if interval_days > 0:
             # Use interval trigger for days
             self.scheduler.add_job(
-                func=self._post_content_job,
+                func=post_content_job,
                 trigger="interval",
                 days=interval_days,
                 id=job_id,
@@ -96,7 +96,7 @@ class SchedulerService:
         else:
             # Use interval trigger for hours
             self.scheduler.add_job(
-                func=self._post_content_job,
+                func=post_content_job,
                 trigger="interval",
                 hours=interval_hours,
                 id=job_id,
@@ -122,7 +122,7 @@ class SchedulerService:
             self.scheduler.remove_job(job_id)
         
         self.scheduler.add_job(
-            func=self._monitor_accounts_job,
+            func=monitor_accounts_job,
             trigger="interval",
             hours=check_interval_hours,
             id=job_id,
@@ -155,8 +155,9 @@ class SchedulerService:
                 "trigger": str(job.trigger)
             })
         return jobs
-    
-    async def _post_content_job(self, user_id: str):
+
+
+async def post_content_job(user_id: str):
         """Background job for posting content"""
         try:
             logger.info(f"Starting content posting job for user {user_id}")
@@ -189,8 +190,9 @@ class SchedulerService:
                 
         except Exception as e:
             logger.error(f"Content posting job failed: {e}")
-    
-    async def _monitor_accounts_job(self, target_accounts: list, user_id: str):
+
+
+async def monitor_accounts_job(target_accounts: list, user_id: str):
         """Background job for monitoring target accounts"""
         try:
             logger.info(f"Starting account monitoring job for user {user_id}")
@@ -249,6 +251,102 @@ class SchedulerService:
                 
         except Exception as e:
             logger.error(f"Account monitoring job failed: {e}")
+
+
+async def post_content_job(user_id: str):
+    """Background job for posting content"""
+    try:
+        logger.info(f"Starting content posting job for user {user_id}")
+        
+        # Import here to avoid circular imports
+        from src.services.claude_service import ClaudeService
+        from src.services.twitter_service import TwitterService
+        
+        # Initialize services
+        claude_service = ClaudeService()
+        twitter_service = TwitterService()  # Will need user tokens
+        
+        # Generate content
+        content_result = await claude_service.generate_tweet_content(
+            prompt="Generate an engaging and interesting tweet",
+            theme="technology and innovation",
+            personality="friendly"
+        )
+        
+        if content_result["success"]:
+            # Post the tweet
+            tweet_result = await twitter_service.post_tweet(content_result["content"])
+            
+            if tweet_result["success"]:
+                logger.info(f"Successfully posted automated tweet: {content_result['content']}")
+            else:
+                logger.error(f"Failed to post tweet: {tweet_result['error']}")
+        else:
+            logger.error(f"Failed to generate content: {content_result['error']}")
+            
+    except Exception as e:
+        logger.error(f"Content posting job failed: {e}")
+
+
+async def monitor_accounts_job(target_accounts: list, user_id: str):
+    """Background job for monitoring target accounts"""
+    try:
+        logger.info(f"Starting account monitoring job for user {user_id}")
+        
+        # Import here to avoid circular imports
+        from src.services.twitter_service import TwitterService
+        from src.services.claude_service import ClaudeService
+        
+        twitter_service = TwitterService()  # Will need user tokens
+        claude_service = ClaudeService()
+        
+        for account in target_accounts:
+            try:
+                username = account.get("username")
+                if not username:
+                    continue
+                
+                logger.info(f"Monitoring account: {username}")
+                
+                # Get user info
+                user_info = await twitter_service.get_user_by_username(username)
+                if not user_info or not user_info["success"]:
+                    continue
+                
+                user_id_target = user_info["id"]
+                
+                # Get recent tweets
+                tweets_result = await twitter_service.get_user_tweets(user_id_target, max_results=5)
+                
+                if tweets_result["success"] and tweets_result["data"]:
+                    for tweet in tweets_result["data"]:
+                        # Analyze tweet for potential reply
+                        analysis = await claude_service.analyze_tweet_for_reply(
+                            tweet_text=tweet.text,
+                            author_username=username
+                        )
+                        
+                        if analysis["success"] and analysis["should_reply"]:
+                            # Post reply
+                            reply_result = await twitter_service.post_tweet(
+                                text=analysis["reply_text"],
+                                reply_to_id=tweet.id
+                            )
+                            
+                            if reply_result["success"]:
+                                logger.info(f"Posted reply to {username}: {analysis['reply_text']}")
+                            else:
+                                logger.error(f"Failed to post reply: {reply_result['error']}")
+                            
+                            # Only reply to one tweet per account per monitoring cycle
+                            break
+                
+            except Exception as e:
+                logger.error(f"Error monitoring account {username}: {e}")
+                continue
+            
+    except Exception as e:
+        logger.error(f"Account monitoring job failed: {e}")
 
 
 # Global scheduler instance

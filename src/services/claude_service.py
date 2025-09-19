@@ -38,7 +38,7 @@ class ClaudeService:
 Generate only the tweet text, no additional formatting or quotes."""
 
             message = self.client.messages.create(
-                model="claude-3-sonnet-20240229",
+                model="claude-3-5-sonnet-20241022",
                 max_tokens=150,
                 temperature=0.7,
                 system=system_prompt,
@@ -103,7 +103,7 @@ REPLY: [your reply text or "N/A"]
 REASON: [brief explanation]"""
 
             message = self.client.messages.create(
-                model="claude-3-sonnet-20240229",
+                model="claude-3-5-sonnet-20241022",
                 max_tokens=200,
                 temperature=0.6,
                 system=system_prompt,
@@ -170,7 +170,7 @@ Each idea should be:
 Format: Return only the tweet ideas, one per line, numbered 1-{count}."""
 
             message = self.client.messages.create(
-                model="claude-3-sonnet-20240229",
+                model="claude-3-5-sonnet-20241022",
                 max_tokens=300,
                 temperature=0.8,
                 system=system_prompt,

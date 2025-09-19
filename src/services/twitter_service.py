@@ -15,23 +15,25 @@ class TwitterService:
     """Service for Twitter API interactions"""
     
     def __init__(self, access_token: Optional[str] = None, access_token_secret: Optional[str] = None):
-        self.access_token = access_token
-        self.access_token_secret = access_token_secret
+        # Use provided tokens or fall back to settings for testing
+        self.access_token = access_token or settings.twitter_access_token
+        self.access_token_secret = access_token_secret or settings.twitter_access_token_secret
         self._client_v2 = None
         self._client_v1 = None
     
     @property
     def client_v2(self) -> Optional[tweepy.Client]:
         """Get Twitter API v2 client"""
-        if not self._client_v2 and self.access_token:
+        if not self._client_v2:
             try:
                 self._client_v2 = tweepy.Client(
-                    bearer_token=None,  # Will be set with proper OAuth
+                    bearer_token=settings.twitter_bearer_token,
                     consumer_key=settings.twitter_client_id,
                     consumer_secret=settings.twitter_client_secret,
                     access_token=self.access_token,
                     access_token_secret=self.access_token_secret
                 )
+                logger.info("Twitter API v2 client initialized successfully")
             except Exception as e:
                 logger.error(f"Failed to create Twitter client: {e}")
         return self._client_v2
