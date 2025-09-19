@@ -211,14 +211,14 @@ GET /config/schedule
 - **Last Success**: Tweet ID `1969124922661486969`
 - **Jobs**: 2 scheduled (posting + monitoring)
 
-**📈 Performance Metrics**:
-- ** Authentication**: Working (OAuth 2.0 + Write access)
-- ** Content Generation**: Claude 3.5 Sonnet responding
-- ** Tweet Posting**: Successfully posting to @ArunkumarV95192
-- ** Scheduling**: APScheduler running background jobs
-- ** Database**: SQLite storing configurations and logs
+**Performance Metrics**:
+- **Authentication**: Working (OAuth 2.0 + Write access)
+- **Content Generation**: Claude 3.5 Sonnet responding
+- **Tweet Posting**: Successfully posting to @ArunkumarV95192
+- **Scheduling**: APScheduler running background jobs
+- **Database**: SQLite storing configurations and logs
 
-##  **Features in Action**
+## **Features in Action**
 
 ### **AI Content Generation**
 ```bash
@@ -234,18 +234,18 @@ curl -X POST "http://localhost:8001/tweets/generate" \
 # Response:
 {
   "success": true,
-  "content": "Mind-blowing to see how AI is transforming our world! 🤖✨",
+  "content": "Mind-blowing to see how AI is transforming our world!",
   "length": 234
 }
 ```
 
-###  **Automated Scheduling**
+### **Automated Scheduling**
 - **Content Posting**: Every 2 hours
 - **Account Monitoring**: Every 2 hours  
 - **Next Execution**: Visible in `/config/status`
 - **Background Jobs**: Persistent across restarts
 
-###  **Smart Monitoring**
+### **Smart Monitoring**
 ```bash
 # Add monitoring targets
 curl -X POST "http://localhost:8001/config/targets" \
@@ -257,7 +257,7 @@ curl -X POST "http://localhost:8001/config/targets" \
 }'
 ```
 
-##  **Development Commands**
+## **Development Commands**
 
 ### **Testing**
 ```bash
@@ -284,7 +284,7 @@ asyncio.run(test())
 "
 ```
 
-###  **Restart Bot**
+### **Restart Bot**
 ```bash
 # Stop current server (Ctrl+C)
 # Then restart
@@ -295,20 +295,20 @@ uvicorn main:app --host 0.0.0.0 --port 8001
 curl -X POST "http://localhost:8001/config/start"
 ```
 
-## 📊 **Monitoring & Logs**
+## **Monitoring & Logs**
 
-### 📈 **Real-time Status**
+### **Real-time Status**
 ```bash
 # Comprehensive status check
 curl -X GET "http://localhost:8001/config/status" | jq
 ```
 
-### 📝 **Logs Location**
+### **Logs Location**
 - **Application Logs**: `logs/twitter_bot.log`
 - **Database**: `twitter_bot.db` (SQLite)
 - **Job Store**: Persistent in database
 
-### 🔍 **Debug Information**
+### **Debug Information**
 ```bash
 # Check scheduled jobs
 curl -X GET "http://localhost:8001/config/jobs"
@@ -317,29 +317,29 @@ curl -X GET "http://localhost:8001/config/jobs"
 curl -X GET "http://localhost:8001/health"
 ```
 
-## 🎯 **Success Metrics**
+## **Success Metrics**
 
-**✅ Proven Working Features**:
-1. **Claude AI Integration**: Generating intelligent content ✅
-2. **Twitter Posting**: Successfully posting to @ArunkumarV95192 ✅  
-3. **OAuth Authentication**: Full read/write access ✅
-4. **Background Scheduling**: Jobs running every 2 hours ✅
-5. **Account Monitoring**: Tracking @elonmusk ✅
-6. **API Endpoints**: All 15+ endpoints operational ✅
-7. **Database Persistence**: Configurations and logs stored ✅
+**Proven Working Features**:
+1. **Claude AI Integration**: Generating intelligent content
+2. **Twitter Posting**: Successfully posting to @ArunkumarV95192  
+3. **OAuth Authentication**: Full read/write access
+4. **Background Scheduling**: Jobs running every 2 hours
+5. **Account Monitoring**: Tracking @elonmusk
+6. **API Endpoints**: All 15+ endpoints operational
+7. **Database Persistence**: Configurations and logs stored
 
-**📈 Current Performance**:
+**Current Performance**:
 - **Uptime**: Running since deployment
 - **Success Rate**: 100% on tested features
 - **Response Time**: <2s for API calls
 - **AI Generation**: ~3-5s per tweet
 - **Posting**: ~1-2s per tweet
 
-## 🚨 **Troubleshooting**
+## **Troubleshooting**
 
 ### Common Issues & Solutions:
 
-**🔧 Server Won't Start**:
+**Server Won't Start**:
 ```bash
 # Check if port is in use
 pkill -f "uvicorn main:app"
@@ -347,14 +347,14 @@ pkill -f "uvicorn main:app"
 uvicorn main:app --host 0.0.0.0 --port 8001
 ```
 
-**🔧 Authentication Errors**:
+**Authentication Errors**:
 ```bash
 # Verify credentials in .env file
 cat .env | grep TWITTER
 # Regenerate access tokens if needed
 ```
 
-**🔧 Bot Not Posting**:
+**Bot Not Posting**:
 ```bash  
 # Check bot status
 curl -X GET "http://localhost:8001/config/status"
@@ -362,50 +362,50 @@ curl -X GET "http://localhost:8001/config/status"
 curl -X POST "http://localhost:8001/config/start"
 ```
 
-## 🎉 **Deployment Status: COMPLETE**
+## **Deployment Status: COMPLETE**
 
-**🟢 FULLY OPERATIONAL** - Your Twitter bot is successfully deployed and running!
+**FULLY OPERATIONAL** - Your Twitter bot is successfully deployed and running!
 
-- **✅ Authentication**: Twitter API connected with write permissions
-- **✅ AI Integration**: Claude 3.5 Sonnet generating content
-- **✅ Automation**: Posting every 2 hours automatically  
-- **✅ Monitoring**: Tracking target accounts for engagement
-- **✅ API**: Full REST API for management and configuration
-- **✅ Database**: Persistent storage for configurations and logs
+- **Authentication**: Twitter API connected with write permissions
+- **AI Integration**: Claude 3.5 Sonnet generating content
+- **Automation**: Posting every 2 hours automatically  
+- **Monitoring**: Tracking target accounts for engagement
+- **API**: Full REST API for management and configuration
+- **Database**: Persistent storage for configurations and logs
 
-**🎯 Check your live bot**: [@ArunkumarV95192](https://twitter.com/ArunkumarV95192)
+**Check your live bot**: [@ArunkumarV95192](https://twitter.com/ArunkumarV95192)
 
 ---
 
-## 📚 **Technical Stack**
+## **Technical Stack**
 
-- **🐍 Backend**: Python 3.8+ with FastAPI
-- **🤖 AI**: Claude 3.5 Sonnet (Anthropic)
-- **🐦 Twitter**: API v2 with OAuth 2.0 PKCE
-- **📅 Scheduling**: APScheduler with SQLAlchemy persistence  
-- **🗄️ Database**: SQLite (production-ready)
-- **🧪 Testing**: Pytest with async support
-- **📖 Documentation**: Auto-generated OpenAPI/Swagger
+- **Backend**: Python 3.8+ with FastAPI
+- **AI**: Claude 3.5 Sonnet (Anthropic)
+- **Twitter**: API v2 with OAuth 2.0 PKCE
+- **Scheduling**: APScheduler with SQLAlchemy persistence  
+- **Database**: SQLite (production-ready)
+- **Testing**: Pytest with async support
+- **Documentation**: Auto-generated OpenAPI/Swagger
 
-## 🤝 **Contributing**
+## **Contributing**
 
 This is a fully working, production-ready Twitter bot. All core features are implemented and tested:
 
-1. **AI Content Generation** ✅
-2. **Automated Posting** ✅  
-3. **Account Monitoring** ✅
-4. **Smart Replies** ✅
-5. **OAuth Authentication** ✅
-6. **Background Scheduling** ✅
-7. **REST API** ✅
+1. **AI Content Generation**
+2. **Automated Posting**  
+3. **Account Monitoring**
+4. **Smart Replies**
+5. **OAuth Authentication**
+6. **Background Scheduling**
+7. **REST API**
 
-## 📄 **License**
+## **License**
 
 This project is configured and ready for production use. All credentials are configured and the bot is actively posting to [@ArunkumarV95192](https://twitter.com/ArunkumarV95192).
 
 ---
 
-**🎉 Congratulations! Your AI-powered Twitter bot is live and automated!** 🤖✨
+**Congratulations! Your AI-powered Twitter bot is live and automated!**
 cp env.example .env
 ```
 
@@ -433,13 +433,13 @@ python main.py
 
 The API will be available at `http://localhost:8000`
 
-## 📚 API Documentation
+## API Documentation
 
 Once the application is running, visit:
 - **API Documentation**: `http://localhost:8000/docs`
 - **Health Check**: `http://localhost:8000/health`
 
-## 🔧 API Endpoints
+## API Endpoints
 
 ### Authentication
 - `GET /auth/login` - Initiate Twitter OAuth login
@@ -465,7 +465,7 @@ Once the application is running, visit:
 - `POST /config/start` - Start the bot
 - `POST /config/stop` - Stop the bot
 
-## 🤖 Usage Examples
+## Usage Examples
 
 ### 1. Configure the Bot
 ```bash
@@ -494,14 +494,14 @@ curl -X POST "http://localhost:8000/tweets" \
 curl http://localhost:8000/config/status
 ```
 
-## 🛡️ Security Features
+## Security Features
 
 - **OAuth 2.0 PKCE**: Secure authentication flow
 - **Environment Variables**: Sensitive data stored in environment variables
 - **Token Management**: Secure handling of access tokens
 - **Rate Limiting**: Respects Twitter API rate limits
 
-## 📈 Planned Features
+## Planned Features
 
 - [ ] Database integration for persistent storage
 - [ ] Advanced scheduling with cron-like expressions
@@ -511,7 +511,7 @@ curl http://localhost:8000/config/status
 - [ ] Docker containerization
 - [ ] Webhook support for real-time events
 
-## 🔧 Development
+## Development
 
 ### Running Tests
 ```bash
@@ -524,11 +524,11 @@ black src/
 flake8 src/
 ```
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License.
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -536,11 +536,11 @@ This project is licensed under the MIT License.
 4. Add tests
 5. Submit a pull request
 
-## ⚠️ Disclaimer
+## Disclaimer
 
 This bot is for educational and legitimate use cases only. Please ensure compliance with Twitter's Terms of Service and API usage policies. Be responsible with automated interactions.
 
-## 📞 Support
+## Support
 
 For issues and questions:
 1. Check the documentation
@@ -549,4 +549,4 @@ For issues and questions:
 
 ---
 
-Built with ❤️ using FastAPI, Claude AI, and Twitter API v2
+Built with using FastAPI, Claude AI, and Twitter API v2
